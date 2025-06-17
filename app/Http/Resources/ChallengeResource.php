@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class ChallengeResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id'           => $this->id,
+            'name'         => $this->name,
+            'description'  => $this->description,
+            'start_date'   => $this->start_date,
+            'end_date'     => $this->end_date,
+            'admin_id'     => $this->admin_id,
+            'invite_token' => $this->invite_token,
+            'tasks'        => TaskResource::collection($this->whenLoaded('tasks')),
+            'participants' => $this->whenLoaded('participants', fn () => $this->participants->count()),
+            'status'       => $this->status,
+            'created_at'   => $this->created_at,
+        ];
+    }
+}
