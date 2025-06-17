@@ -46,4 +46,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function challengesCreated()
+    {
+        return $this->hasMany(Challenge::class, 'admin_id');
+    }
+
+    public function challengesParticipations()
+    {
+        return $this->hasMany(ChallengeParticipant::class);
+    }
 }
