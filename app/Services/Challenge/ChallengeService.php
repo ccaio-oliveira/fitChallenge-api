@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Services\Challenge;
+
 use App\Models\Challenge;
 use App\Models\ChallengeParticipant;
 use Illuminate\Support\Str;
