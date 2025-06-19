@@ -44,4 +44,15 @@ class ChallengeService
             return $challenge;
         });
     }
+
+    public function getUserChallenges(int $userId)
+    {
+        return Challenge::where('admin_id', $userId)
+        ->orWhereHas('participants', function ($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })
+        ->with(['tasks', 'participants.user'])
+        ->orderBy('created_at', 'desc')
+        ->get();
+    }
 }

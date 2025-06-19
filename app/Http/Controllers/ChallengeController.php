@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Challenge\StoreChallengeRequest;
 use App\Http\Resources\ChallengeResource;
+use App\Models\Challenge;
 use App\Services\Challenge\ChallengeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,6 +17,13 @@ class ChallengeController extends Controller
     public function __construct(ChallengeService $challengeService)
     {
         $this->challengeService = $challengeService;
+    }
+
+    public function index(Request $request)
+    {
+        $user = $request->user();
+        $challenges = $this->challengeService->getUserChallenges($user->id);
+        return ChallengeResource::collection($challenges);
     }
 
     public function store(StoreChallengeRequest $request): JsonResponse

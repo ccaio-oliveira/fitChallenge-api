@@ -15,5 +15,6 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json(Auth::user());
     });
 
+    Route::get('/challenges', [ChallengeController::class, 'index']);
     Route::post('/challenges', [ChallengeController::class, 'store']);
 });
