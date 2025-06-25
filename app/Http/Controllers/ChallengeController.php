@@ -31,4 +31,13 @@ class ChallengeController extends Controller
         $challenge = $this->challengeService->createChallenge($request->validated(), Auth::id());
         return response()->json(new ChallengeResource($challenge->load('tasks', 'participants')), 201);
     }
+
+    public function show(Request $request, $id)
+    {
+        $challenge = $this->challengeService->getChallengeDetail($id, $request->user()->id);
+        if (!$challenge) {
+            return response()->json(['message' => 'Desafio não encontrado'], 404);
+        }
+        return (new ChallengeResource($challenge, $request->user()->id));
+    }
 }

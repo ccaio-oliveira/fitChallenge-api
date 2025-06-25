@@ -55,4 +55,17 @@ class ChallengeService
         ->orderBy('created_at', 'desc')
         ->get();
     }
+
+    public function getChallengeDetail(int $challengeId, int $userId)
+    {
+        return Challenge::with(['tasks', 'participants.user'])
+        ->where('id', $challengeId)
+        ->where(function ($q) use ($userId) {
+            $q->where('admin_id', $userId)
+            ->orWhereHas('participants', function ($q2) use ($userId) {
+                $q2->where('user_id', $userId);
+            });
+        })
+        ->first();
+    }
 }
