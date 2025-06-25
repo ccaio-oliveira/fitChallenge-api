@@ -19,5 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [ChallengeController::class, 'index']);
         Route::post('/', [ChallengeController::class, 'store']);
         Route::get('/{id}', [ChallengeController::class, 'show']);
+
+        Route::post('/{challenge}/tasks/{task}/complete', [ChallengeController::class, 'completeTask']);
     });
 });

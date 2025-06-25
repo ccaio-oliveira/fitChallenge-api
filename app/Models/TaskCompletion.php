@@ -15,11 +15,17 @@ class TaskCompletion extends Model
         'date',
         'completed',
         'photo_url',
-        'points_awarded'
+        'points_awarded',
+        'media_url',
+        'media_type',
+        'text_proof',
+        'checked_options',
+        'status'
     ];
 
     protected $casts = [
-        'completed' => 'boolean'
+        'completed' => 'boolean',
+        'checked_options' => 'array',
     ];
 
     public function participant()

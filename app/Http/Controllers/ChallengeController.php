@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Challenge\StoreChallengeRequest;
+use App\Http\Requests\CompleteTaskRequest;
 use App\Http\Resources\ChallengeResource;
 use App\Models\Challenge;
 use App\Services\Challenge\ChallengeService;
@@ -39,5 +40,15 @@ class ChallengeController extends Controller
             return response()->json(['message' => 'Desafio não encontrado'], 404);
         }
         return (new ChallengeResource($challenge, $request->user()->id));
+    }
+
+    public function completeTask(CompleteTaskRequest $request, $challengeId, $taskId)
+    {
+        try {
+            $completion = $this->challengeService->completeTask($request->all(), $challengeId, $taskId, $request->user()->id);
+            return response()->json(['success' => true, 'completion' => $completion], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 }
