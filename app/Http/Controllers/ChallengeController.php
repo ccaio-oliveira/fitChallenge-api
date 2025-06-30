@@ -45,7 +45,14 @@ class ChallengeController extends Controller
     public function completeTask(CompleteTaskRequest $request, $challengeId, $taskId)
     {
         try {
-            $completion = $this->challengeService->completeTask($request->all(), $challengeId, $taskId, $request->user()->id);
+            $data = $request->validated();
+            
+            // Add the file to the data if present
+            if ($request->hasFile('media_file')) {
+                $data['media_file'] = $request->file('media_file');
+            }
+            
+            $completion = $this->challengeService->completeTask($data, $challengeId, $taskId, $request->user()->id);
             return response()->json(['success' => true, 'completion' => $completion], 201);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);

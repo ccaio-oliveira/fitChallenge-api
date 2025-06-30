@@ -18,14 +18,22 @@ class Task extends Model
         'points_weekday',
         'points_weekend',
         'replicate',
-        'availability_dates'
+        'availability_dates',
+        'media_type',
+        'options',
+        'is_bonus',
+        'max_completions',
+        'is_required',
+        'start_time',
+        'end_time'
     ];
 
     protected $casts = [
         'days' => 'array',
-        'requires_photo' => 'boolean',
-        'replicate' => 'boolean',
-        'availability_dates' => 'array'
+        'availability_dates' => 'array',
+        'options' => 'array',
+        'is_bonus' => 'boolean',
+        'is_required' => 'boolean'
     ];
 
     public function challenge()

@@ -35,6 +35,13 @@ class StoreChallengeRequest extends FormRequest
             'tasks.*.points_weekend' => ['integer'],
             'tasks.*.replicate' => ['boolean'],
             'tasks.*.availability_dates' => ['nullable', 'array'],
+            'tasks.*.media_type' => ['nullable', 'in:photo,video,audio,text'],
+            'tasks.*.options' => ['nullable', 'array'],
+            'tasks.*.is_bonus' => ['boolean'],
+            'tasks.*.max_completions' => ['nullable', 'integer'],
+            'tasks.*.is_required' => ['boolean'],
+            'tasks.*.start_time' => ['nullable', 'date_format:H:i'],
+            'tasks.*.end_time' => ['nullable', 'date_format:H:i'],
         ];
     }
 }

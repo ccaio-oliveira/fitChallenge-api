@@ -22,16 +22,14 @@ class CompleteTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'challenge_participant_id' => 'required|exists:challenge_participants,id',
-            'task_id' => 'required|exists:tasks,id',
-            'date' => 'required|date',
-            'completed' => 'required|boolean',
-            'photo_url' => 'nullable|url',
-            'points_awarded' => 'nullable|integer|min:0',
-            'media_url' => 'nullable|url',
+            'date' => 'nullable|date',
+            'completed' => 'nullable|in:true,false,1,0', // Aceita string boolean
+            'media_file' => 'nullable|file|mimes:jpeg,jpg,png,gif,mp4,mov,avi,mp3,wav,m4a|max:10240', // 10MB max
             'media_type' => 'nullable|in:photo,video,audio,text',
             'text_proof' => 'nullable|string|max:1000',
-            'checked_options' => 'nullable|array',
+            'checked_options' => 'nullable|array', // Será enviado como checked_options[0], checked_options[1], etc.
+            'checked_options.*' => 'string', // Cada item do array deve ser string
+            'points_awarded' => 'nullable|integer|min:0',
             'status' => 'nullable|in:pending,approved,rejected'
         ];
     }

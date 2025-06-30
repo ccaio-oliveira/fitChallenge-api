@@ -28,12 +28,19 @@ class ChallengeService
                 $challenge->tasks()->create([
                     'name' => $taskData['name'],
                     'description' => $taskData['description'] ?? null,
-                    'days' => $taskData['days'] ?? null,
-                    'requires_photo' => $taskData['requires_photo'] ?? false,
                     'points_weekday' => $taskData['points_weekday'] ?? 1,
                     'points_weekend' => $taskData['points_weekend'] ?? 2,
+                    'days' => $taskData['days'] ?? null,
+                    'availability_dates' => $taskData['availability_dates'] ?? null,
+                    'requires_photo' => $taskData['requires_photo'] ?? false,
                     'replicate' => $taskData['replicate'] ?? false,
-                    'availability_dates' => $taskData['availability_dates'] ?? null
+                    'media_type' => $taskData['media_type'] ?? null,
+                    'options' => $taskData['options'] ?? null,
+                    'is_bonus' => $taskData['is_bonus'] ?? false,
+                    'max_completions' => $taskData['max_completions'] ?? null,
+                    'is_required' => $taskData['is_required'] ?? true,
+                    'start_time' => $taskData['start_time'] ?? null,
+                    'end_time' => $taskData['end_time'] ?? null,
                 ]);
             }
 
@@ -93,16 +100,30 @@ class ChallengeService
         }
 
         $task = Task::findOrFail($taskId);
-        $weekday = now()->dayOfWeekIso;
-        $points = (in_array($weekday, [6,7]) ? $task->points_weekend : $task->points_weekday);
+
+        // Use custom points if provided, otherwise calculate based on weekday
+        if (isset($data['points_awarded']) && $data['points_awarded'] !== null) {
+            $points = $data['points_awarded'];
+        } else {
+            $weekday = now()->dayOfWeekIso;
+            $points = (in_array($weekday, [6,7]) ? $task->points_weekend : $task->points_weekday);
+        }
+
+        // Handle file upload if present
+        $mediaUrl = null;
+        if (isset($data['media_file']) && $data['media_file']) {
+            $file = $data['media_file'];
+            $filename = time() . '_' . $userId . '_' . $taskId . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('task-completions', $filename, 'public');
+            $mediaUrl = '/storage/' . $path;
+        }
 
         return TaskCompletion::create([
             'challenge_participant_id' => $participant->id,
             'task_id' => $taskId,
             'date' => $date,
-            'completed' => true,
-            'photo_url' => $data['photo_url'] ?? null,
-            'media_url' => $data['media_url'] ?? null,
+            'completed' => filter_var($data['completed'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            'media_url' => $mediaUrl,
             'media_type' => $data['media_type'] ?? null,
             'text_proof' => $data['text_proof'] ?? null,
             'checked_options' => $data['checked_options'] ?? null,
